@@ -66,7 +66,7 @@ int main(int argc, char * argv[]) {
 	char sqlitefile[255];
 	int sqlopend = 0;
 	sqlite3 *dbsqlite;
-	const char* SQL_TABLE = "CREATE TABLE IF NOT EXISTS nat_logs(start datetime, end datetime, Iip int unsigned, Eip int unsigned, sport int, dport int, Dip int unsigned, protocol int);";
+	const char* SQL_TABLE = "CREATE TABLE IF NOT EXISTS nat_logs(start datetime, end datetime, srcip int unsigned, psrcip int unsigned, dstip int unsigned, pdstip int unsigned, sport int, psport int, dport int, pdport int, protocol int);";
 
 	char dir_[255];
 	sprintf(dir_, "%s", dirname(argv[0]));
@@ -267,8 +267,8 @@ int main(int argc, char * argv[]) {
 							if(start_>0) {
 								if(sqlopend==1) {
 									char SQL[1024];
-									sprintf(SQL, "insert into `nat_logs` VALUES(DATETIME(DATETIME('%lu', 'unixepoch'), 'localtime'), DATETIME(DATETIME('%lu', 'unixepoch'), 'localtime'), '%u', '%u', '%hu', '%hu', '%u', '%u');",
-									start_, now, srcip, pnatsrcip, pnatsport, pnatdport, dstip, proto);
+									sprintf(SQL, "insert into `nat_logs` VALUES(DATETIME(DATETIME('%lu', 'unixepoch'), 'localtime'), DATETIME(DATETIME('%lu', 'unixepoch'), 'localtime'), '%u', '%u', '%u', %u, '%hu', '%hu', '%hu', '%hu', '%u');",
+									start_, now, srcip, pnatsrcip, dstip, pnatdstip, sport, pnatsport, dport, pnatdport, proto);
 									char * err;
 									sqlite3_exec(dbsqlite, SQL, 0, 0, &err);
 								}
