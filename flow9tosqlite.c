@@ -228,9 +228,6 @@ int main(int argc, char * argv[]) {
 						} else if(f->event==2) {
 							sprintf(fb_, "%s/tmpfs/nat_logs/%u_%u_%u_%u_%hu_%hu_%hu_%hu_%u", dir_, srcip, pnatsrcip, dstip, pnatdstip, sport, pnatsport, dport, pnatdport, proto);
 							unsigned long int start_ = 0;
-							time_t t = time(NULL);
-							struct tm tm = *localtime(&t);
-							now = t;
 							if (access(fb_, F_OK) == 0) {
 								if(mf=fopen (fb_, "r")) {
 									char str[1024];
@@ -239,19 +236,19 @@ int main(int argc, char * argv[]) {
 									if(atoi(str)>0) start_ = atol(str);
 									fclose(mf);
 								}
-								sprintf(fb_d, "%s/nat_logs/%d/%02d", dir_, tm.tm_year + 1900, tm.tm_mon + 1);
+								sprintf(fb_d, "%s/nat_logs/%d/%02d", dir_, ts.tm_year + 1900, ts.tm_mon + 1);
 								if (access(fb_d, F_OK) != 0) {
 									sprintf(fb_d, "%s/nat_logs", dir_);
 									mkdir(fb_d, 0777);
-									sprintf(fb_d, "%s/nat_logs/%d", dir_, tm.tm_year + 1900);
+									sprintf(fb_d, "%s/nat_logs/%d", dir_, ts.tm_year + 1900);
 									mkdir(fb_d, 0777);
-									sprintf(fb_d, "%s/nat_logs/%d/%02d", dir_, tm.tm_year + 1900, tm.tm_mon + 1);
+									sprintf(fb_d, "%s/nat_logs/%d/%02d", dir_, ts.tm_year + 1900, ts.tm_mon + 1);
 									mkdir(fb_d, 0777);
 								}
 								char sqlitefile_[255];
-								sprintf(sqlitefile_, "%s/nat_logs/%d/%02d/%02d.db", dir_, tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+								sprintf(sqlitefile_, "%s/nat_logs/%d/%02d/%02d.db", dir_, ts.tm_year + 1900, ts.tm_mon + 1, ts.tm_mday);
 								if(strcmp(sqlitefile_, sqlitefile)!=0) {
-									sprintf(sqlitefile, "%s/nat_logs/%d/%02d/%02d.db", dir_, tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+									sprintf(sqlitefile, "%s/nat_logs/%d/%02d/%02d.db", dir_, ts.tm_year + 1900, ts.tm_mon + 1, ts.tm_mday);
 									if(sqlopend==1) {
 										sqlite3_close(dbsqlite);
 									}
@@ -261,7 +258,7 @@ int main(int argc, char * argv[]) {
 									sqlite3_exec(dbsqlite, SQL_TABLE, 0, 0, &err);
 								}
 								sprintf(fb_d, "%s/nat_logs/%d/%02d/%02d/%s", dir_,
-								tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, long2ip(dstip, 0));
+								ts.tm_year + 1900, ts.tm_mon + 1, ts.tm_mday, long2ip(dstip, 0));
 								remove(fb_);
 							} else start_ = 0;
 							if(start_>0) {
